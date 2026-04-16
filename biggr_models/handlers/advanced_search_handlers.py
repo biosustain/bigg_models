@@ -69,7 +69,7 @@ class GenomeSearchHandler(utils.DataHandler):
             Genome.accession_value,
             "Accession",
             hyperlink=(
-                "/universal/metabolites/"
+                "/genomes/"
                 "${row['genome__accession_type']}:"
                 "${row['genome__accession_value']}"
             ),
