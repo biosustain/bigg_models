@@ -246,22 +246,10 @@ def do_safe_query(func, *args, **kwargs):
 class BaseHandler(RequestHandler):
     """Base RequestHandler that handles standard requests."""
 
-    error_template = env.get_template("error.html")
-
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
         self.set_header("Access-Control-Allow-Headers", "x-requested-with")
         self.set_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-
-    def write_error(self, status_code, **kwargs):
-        if self.request.uri.startswith("/api"):
-            self.write({"error": self._reason})
-        else:
-            self.write(self.error_template.render(
-                status_code=status_code,
-                reason=self._reason,
-            ))
-        self.finish()
 
     def write(self, chunk):
         # note that serving a json list is a security risk
