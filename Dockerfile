@@ -39,8 +39,6 @@ COPY pytest.ini /app/
 COPY setup.cfg /app/
 COPY setup.py /app/
 
-COPY settings.ini /app/settings.ini
-
 RUN sass ./biggr_models/scss/custom.scss ./biggr_models/static/css/custom.css
 
 RUN cp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js biggr_models/static/js/

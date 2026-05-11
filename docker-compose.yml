@@ -19,6 +19,7 @@ services:
       - biggr-net
     volumes:
       - /data/biggr-bigg-models/:/models
+      - ./settings.ini:/app/settings.ini
 
   nginx-prod:
     profiles:
