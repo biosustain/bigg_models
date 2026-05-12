@@ -494,6 +494,7 @@ def get_model_list_for_metabolite(metabolite_bigg_id, session):
             ModelCompartmentalizedComponent.compartmentalized_component_id
             == CompartmentalizedComponent.id,
         )
+        .join(Model, Model.id == ModelCompartmentalizedComponent.model_id)
         .join(CompartmentalizedComponent.component)
         .filter(Component.bigg_id == metabolite_bigg_id)
     )
