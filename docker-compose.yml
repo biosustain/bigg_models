@@ -27,11 +27,11 @@ services:
     container_name: biggr-nginx-prod
     build: ./nginx
     image: biggr_nginx_prod:latest
-    restart: always       # for the container to be up and running again even after the VM is brought down
+    restart: always # for the container to be up and running again even after the VM is brought down
     volumes:
-      - /var/www/certbot/:/var/www/certbot/:ro      
-      - /etc/letsencrypt/live/biggr.org/fullchain.pem:/etc/nginx/ssl/live/biggr.org/fullchain.pem        # the SSL certificate
-      - /etc/letsencrypt/live/biggr.org/privkey.pem:/etc/nginx/ssl/live/biggr.org/privkey.pem            # the SSL private key
+      - /var/www/certbot/:/var/www/certbot/:ro
+      - /etc/letsencrypt/live/biggr.org/fullchain.pem:/etc/nginx/ssl/live/biggr.org/fullchain.pem # the SSL certificate
+      - /etc/letsencrypt/live/biggr.org/privkey.pem:/etc/nginx/ssl/live/biggr.org/privkey.pem # the SSL private key
     ports:
       - 80:80
       - 443:443
@@ -73,7 +73,7 @@ services:
       - .env
     networks:
       - biggr-net
-    
+
   certbot:
     profiles:
       - prod
