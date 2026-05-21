@@ -21,7 +21,7 @@ services:
       - /data/biggr-bigg-models/:/models
       - ./settings.ini:/app/settings.ini
     environment:
-      - COBRADB_DB_HOST=biggr-db
+      - COBRADB_POSTGRES_HOST=biggr-db
 
   nginx-prod:
     profiles:
