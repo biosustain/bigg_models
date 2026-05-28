@@ -49,6 +49,10 @@ class ModelsListViewHandler(utils.DataHandler):
     def breadcrumbs(self):
         return [("Home", "/"), ("Models", "/models/")]
 
+    def post_filter(self, query):
+        # Default order: by Model.id ascending (oldest loaded first).
+        return query.order_by(Model.id)
+
 
 class ModelCollectionHandler(utils.DataHandler):
     title = "Models in Collection"
