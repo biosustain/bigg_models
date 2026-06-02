@@ -12,7 +12,7 @@ This repository includes the web server and front-end for BiGGr. The database is
 Installation
 ============
 
-It is recommended to install and run BiGGr Models using [Docker](https://www.docker.com/).
+It is recommended to install and run BiGGr using [Docker](https://www.docker.com/).
 
 To run the server using Docker, make sure Docker is installed and then follow these steps:
 

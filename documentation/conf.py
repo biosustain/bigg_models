@@ -66,7 +66,7 @@ from biggr_models import __version__ as release  # noqa: E402
 
 doc_name = f"{project} Documentation"
 authors = "Pascal A. Pieters"
-description = """BiGGr Models Webserver."""
+description = """BiGGr Webserver."""
 
 version = ".".join(release.split(".")[:2])
 author = authors
