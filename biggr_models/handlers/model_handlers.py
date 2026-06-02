@@ -44,14 +44,15 @@ class ModelsListViewHandler(utils.DataHandler):
     ]
     page_data = {
         "row_icon": "model_S",
+        "disable_default_order": True,
     }
 
     def breadcrumbs(self):
         return [("Home", "/"), ("Models", "/models/")]
 
     def post_filter(self, query):
-        # Default order: by Model.id ascending (oldest loaded first).
-        return query.order_by(Model.id)
+        # Default order: oldest loaded first
+        return query.order_by(Model.date_modified.asc(), Model.id.asc())
 
 
 class ModelCollectionHandler(utils.DataHandler):
