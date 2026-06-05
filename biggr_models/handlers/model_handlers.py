@@ -51,8 +51,13 @@ class ModelsListViewHandler(utils.DataHandler):
         return [("Home", "/"), ("Models", "/models/")]
 
     def post_filter(self, query):
-        # Default order: oldest loaded first
-        return query.order_by(Model.date_modified.asc(), Model.id.asc())
+        # Default order: oldest loaded first.
+        # order_by(None) strips any column-spec ORDER BY the DataTables frontend
+        # smuggles in (e.g. bigg_id ASC); otherwise that runs primary and our
+        # date_modified sort becomes the tiebreaker.
+        return query.order_by(None).order_by(
+            Model.date_modified.asc(), Model.id.asc()
+        )
 
 
 class ModelCollectionHandler(utils.DataHandler):
