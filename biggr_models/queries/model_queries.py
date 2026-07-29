@@ -161,6 +161,7 @@ def get_model_and_counts(
         "model_bigg_id": model_db.bigg_id,
         "collection_bigg_id": model_db.collection.bigg_id,
         "published_filename": model_db.published_filename,
+        "method": model_db.method,
         "organism": organism,
         "strain": genome_strain,
         "genome_name": genome_name,

@@ -48,6 +48,9 @@
     {{ cards.flush_list_group_item(label="Publication DOI", value=reference_id, link="https://dx.doi.org/"~reference_id,
     accent=True) }}
     {% endif %}
+    {% if method %}
+    {{ cards.flush_list_group_item(label="Method", value=method, accent=True) }}
+    {% endif %}
     {{ cards.flush_list_group_item(label='Part of collection', value=collection_bigg_id,
     link='/collections/'~collection_bigg_id, accent=True) }}
     {% endcall %}
