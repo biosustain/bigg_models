@@ -181,6 +181,12 @@ def get_model_and_counts(
     memote_result_db = get_general_results_for_model(session, model_db.id)
     result["memote_result"] = memote_result_db
 
+    memote_run_db = model_db.memote_run
+    result["memote_version"] = getattr(memote_run_db, "memote_version", None)
+    result["cobrapy_version"] = getattr(memote_run_db, "cobrapy_version", None)
+    result["memote_solver"] = getattr(memote_run_db, "solver", None)
+    result["memote_skipped_tests"] = getattr(memote_run_db, "skipped_tests", None)
+
     if static_model_dir:
         # get filesizes
         for ext in ("xml", "xml_gz", "mat", "mat_gz", "json", "json_gz"):

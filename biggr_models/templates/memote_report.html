@@ -81,21 +81,33 @@
 {% if memote_result is not none %}
 <div class="col-12">
 	<div class="card mb-3">
-		<div class="card-header">
-			<h5 class="card-title">MEMOTE Report</h5>
-		</div>
-		<div
-			class="card-body card-intro d-flex align-items-center">
-			<div class="flex-grow-1 pe-2">MEMOTE model test suite results, assessing model consistency,
-				annotation quality, and more.</div>
-			<div><a class="btn btn-sm btn-outline-secondary me-2" role="button" href="/static/models/memote/{{model_bigg_id}}.biggr.json.gz"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-				  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
-				</svg></a>
-			</div>
-			<div>
+		<div class="card-header d-flex align-items-center flex-wrap gap-2">
+			<h5 class="card-title mb-0">MEMOTE Report</h5>
+			{# The score depends on all three together, so they are shown as one set. #}
+			{% if memote_version %}
+			<span class="badge bg-body-tertiary text-body-secondary border fw-normal"
+				title="Scores are not comparable between MEMOTE versions.">MEMOTE v{{memote_version}}</span>
+			{% endif %}
+			{% if cobrapy_version %}
+			<span class="badge bg-body-tertiary text-body-secondary border fw-normal"
+				title="Version of COBRApy used to load and simulate the model.">COBRApy v{{cobrapy_version}}</span>
+			{% endif %}
+			{% if memote_solver %}
+			<span class="badge bg-body-tertiary text-body-secondary border fw-normal"
+				title="Solver used for the flux-dependent tests.">{{memote_solver}} solver</span>
+			{% endif %}
+			{% if memote_skipped_tests %}
+			<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle fw-normal"
+				title="These tests were not run, so they are absent from the report rather than failing: {{memote_skipped_tests}}">Skipped:
+				{{memote_skipped_tests}}</span>
+			{% endif %}
+			<div class="ms-auto d-flex align-items-center">
+				<a class="btn btn-sm btn-outline-secondary me-2" role="button" href="/static/models/memote/{{model_bigg_id}}.biggr.json.gz"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+					  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+					</svg></a>
 				<input id="memote-report-input"
-					class="form-control border-1 border-secondary p-1 ps-2 pe-2" type="search"
-					placeholder="Filter" aria-label="Filter">
+					class="form-control form-control-sm border-1 border-secondary p-1 ps-2 pe-2" type="search"
+					placeholder="Filter" aria-label="Filter" style="max-width: 12rem;">
 			</div>
 		</div>
 		<div class="memote-report" id="memote-report-body">
