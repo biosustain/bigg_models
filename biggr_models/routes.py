@@ -8,6 +8,7 @@ from biggr_models.handlers import (
     identifiers_handlers,
     download_handlers,
     escher_handlers,
+    home_handlers,
     utils,
     object_handlers,
     reaction_handlers,
@@ -46,7 +47,7 @@ def url(
 def get_routes():
     api_regex = r"(?P<api>/api/%s)?" % api_v
     routes = [
-        (r"/", utils.TemplateHandler, {"template_name": "index.html"}),
+        (r"/", home_handlers.HomeHandler),
         (r"/about/?", utils.TemplateHandler, {"template_name": "about.html"}),
         (
             r"/api/%s/objects/?$" % api_v,

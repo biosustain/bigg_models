@@ -1,10 +1,10 @@
 {% macro highlighted_entity(base_url, bigg_id, extra=none) %}
 <a class="list-group-item list-group-item-action" href="{{base_url}}{{bigg_id}}">{{bigg_id}}{% if extra %} <small><i>({{extra}})</i></small>{% endif %}</a>
 {% endmacro %}
-{% macro homepage_card(title, icon, url) %}
+{% macro homepage_card(title, icon, url, count=none) %}
   <div class="col-md-6 col-lg-4 mb-3">
     <div class="card">
-    <div class="ps-4 pe-4 pt-1 pb-1 fw-semibold fs-5 border-bottom border-1 border-secondary-subtle position-relative"><a href="{{url}}" class="d-block stretched-link text-reset text-decoration-none">{{title}}</a></div>
+    <div class="ps-4 pe-4 pt-1 pb-1 fw-semibold fs-5 border-bottom border-1 border-secondary-subtle position-relative d-flex align-items-baseline gap-2"><a href="{{url}}" class="d-block stretched-link text-reset text-decoration-none">{{title}}</a>{% if count is not none %}<span class="fs-6 fw-normal text-body-secondary position-relative" style="z-index: 2; cursor: default;">({{ "{:,}".format(count) }})</span>{% endif %}</div>
       <div class="row g-0">
         <div class="col-3 col-md-4 position-relative d-flex flex-column justify-content-center">
         <a href="{{url}}" class="stretched-link">
@@ -60,37 +60,37 @@
       </div>
 
       <div class="row">
-        {% call(url) homepage_card("Collections", "collection_L", "/collections/") %}
+        {% call(url) homepage_card("Collections", "collection_L", "/collections/", count=counts.get("collections")) %}
           {{ highlighted_entity(url, "iECx6", extra="E. coli") }}
           {{ highlighted_entity(url, "iML1515", extra="E. coli MG1655") }}
           {{ highlighted_entity(url, "iPKB_Clostridiaceae") }}
         {% endcall %}
          
-        {% call(url) homepage_card("Models", "model_L", "/models/") %}
+        {% call(url) homepage_card("Models", "model_L", "/models/", count=counts.get("models")) %}
           {{ highlighted_entity(url, "iML1515", extra="E. coli MG1655") }}
           {{ highlighted_entity(url, "iMM904", extra="S. cereviseae S288S") }}
           {{ highlighted_entity(url, "iPC815", extra="Y. pestis CO92") }}
         {% endcall %}
 
-        {% call(url) homepage_card("Metabolites", "molecule_smallmolecule_L", "/universal/metabolites/") %}
+        {% call(url) homepage_card("Metabolites", "molecule_smallmolecule_L", "/universal/metabolites/", count=counts.get("metabolites")) %}
           {{ highlighted_entity(url, "glc__D", extra="D-glucopyranose") }}
           {{ highlighted_entity(url, "atp", extra="ATP") }}
           {{ highlighted_entity(url, "arg__L", extra="L-Arginine") }}
         {% endcall %}
 
-        {% call(url) homepage_card("Reactions", "reaction_L", "/universal/reactions/") %}
+        {% call(url) homepage_card("Reactions", "reaction_L", "/universal/reactions/", count=counts.get("reactions")) %}
           {{ highlighted_entity(url, "ATPM", extra="ATP Mainenance") }}
           {{ highlighted_entity(url, "ALLTN", extra="Allantoinase") }}
           {{ highlighted_entity(url, "ARGDC", extra="Arg. Decarboxylase") }}
         {% endcall %}
 
-        {% call(url) homepage_card("Genomes", "genome_L", "/genomes/") %}
+        {% call(url) homepage_card("Genomes", "genome_L", "/genomes/", count=counts.get("genomes")) %}
           {{ highlighted_entity(url ~ "ncbi_assembly:", "GCF_000005845.2") }}
           {{ highlighted_entity(url ~ "ncbi_assembly:", "GCF_000009065.1") }}
           {{ highlighted_entity(url ~ "ncbi_assembly:", "GCF_000146045.2") }}
         {% endcall %}
 
-        {% call(url) homepage_card("Compartments", "compartment_L", "/compartments/") %}
+        {% call(url) homepage_card("Compartments", "compartment_L", "/compartments/", count=counts.get("compartments")) %}
           {{ highlighted_entity(url, "c", extra="Cytosol") }}
           {{ highlighted_entity(url, "p", extra="Periplasm") }}
           {{ highlighted_entity(url, "e", extra="Extracellular Space") }}
