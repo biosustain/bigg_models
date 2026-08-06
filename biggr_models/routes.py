@@ -49,6 +49,7 @@ def get_routes():
     routes = [
         (r"/", home_handlers.HomeHandler),
         (r"/about/?", utils.TemplateHandler, {"template_name": "about.html"}),
+        (r"/statistics/?", home_handlers.StatisticsHandler),
         (
             r"/api/%s/objects/?$" % api_v,
             object_handlers.ObjectHandler,

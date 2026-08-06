@@ -1,0 +1,121 @@
+{% extends "general_main.html" %}
+{% block title %}BiGGr Statistics{% endblock %}
+{% set statisticspage = True %}
+{% block body %}
+<div class="row">
+  <div class="col-12 col-lg-10 offset-lg-1">
+
+    <h1 class="fs-3 mb-1">Database growth</h1>
+    <p class="text-body-secondary mb-4">
+      The number of metabolic models in BiGGr, recorded at each database update.
+    </p>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        {% if chart %}
+        <div class="d-flex flex-wrap align-items-baseline gap-4 mb-3">
+          <div>
+            <div class="fs-2 fw-semibold lh-1">{{ "{:,}".format(chart.last.count) }}</div>
+            <div class="small text-body-secondary">models today</div>
+          </div>
+          <div>
+            <div class="fs-4 fw-semibold lh-1 text-success">
+              {% if chart.added >= 0 %}+{% endif %}{{ "{:,}".format(chart.added) }}
+            </div>
+            <div class="small text-body-secondary">
+              since {{ chart.first.date.strftime("%b %Y") }}
+            </div>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <svg viewBox="0 0 {{ chart.width }} {{ chart.height }}"
+               width="100%" height="{{ chart.height }}"
+               role="img" aria-label="Number of models over time"
+               style="min-width: 480px; display: block;">
+
+            {# horizontal gridlines + y-axis labels #}
+            {% for tick in chart.y_ticks %}
+            <line x1="{{ chart.plot_left }}" y1="{{ "%.1f"|format(tick.y) }}"
+                  x2="{{ chart.plot_right }}" y2="{{ "%.1f"|format(tick.y) }}"
+                  stroke="currentColor" stroke-opacity="0.12" stroke-width="1"/>
+            <text x="{{ chart.plot_left - 10 }}" y="{{ "%.1f"|format(tick.y + 4) }}"
+                  text-anchor="end" font-size="12"
+                  fill="currentColor" fill-opacity="0.65">{{ "{:,}".format(tick.value) }}</text>
+            {% endfor %}
+
+            {# filled area reads as an accumulated total #}
+            <polygon points="{{ chart.area }}"
+                     fill="var(--bs-primary)" fill-opacity="0.12"/>
+
+            <polyline points="{{ chart.polyline }}"
+                      fill="none" stroke="var(--bs-primary)"
+                      stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+
+            {# one dot per ETL run, with the exact figure on hover #}
+            {% for dot in chart.dots %}
+            <circle cx="{{ "%.1f"|format(dot.x) }}" cy="{{ "%.1f"|format(dot.y) }}" r="4"
+                    fill="var(--bs-body-bg)" stroke="var(--bs-primary)" stroke-width="2"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="{{ dot.date.strftime('%d %b %Y') }}: {{ '{:,}'.format(dot.count) }} models"/>
+            {% endfor %}
+
+            {# x-axis baseline + date labels #}
+            <line x1="{{ chart.plot_left }}" y1="{{ chart.plot_bottom }}"
+                  x2="{{ chart.plot_right }}" y2="{{ chart.plot_bottom }}"
+                  stroke="currentColor" stroke-opacity="0.3" stroke-width="1"/>
+            {% for tick in chart.x_ticks %}
+            <text x="{{ "%.1f"|format(tick.x) }}" y="{{ chart.plot_bottom + 20 }}"
+                  text-anchor="{% if loop.first %}start{% else %}end{% endif %}"
+                  font-size="12" fill="currentColor" fill-opacity="0.65">{{ tick.label }}</text>
+            {% endfor %}
+          </svg>
+        </div>
+
+        {% else %}
+        {# Cold start: the table is filled one snapshot per ETL run, so a new
+           deployment has nothing to plot until the second run. #}
+        <div class="text-center py-4">
+          {% if model_points %}
+          <div class="fs-2 fw-semibold lh-1">{{ "{:,}".format(model_points[-1].count) }}</div>
+          <div class="small text-body-secondary mb-3">models</div>
+          <p class="text-body-secondary mb-0">
+            Growth is recorded at each database update. The chart appears once
+            there are at least two updates to compare.
+          </p>
+          {% else %}
+          <p class="text-body-secondary mb-0">
+            No growth data has been recorded yet. It is collected at the end of
+            each database update.
+          </p>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if history %}
+    <h2 class="fs-5 mb-3">Current contents</h2>
+    <div class="row g-3 mb-4">
+      {% for label, key in [("Collections", "collections"), ("Models", "models"),
+                            ("Metabolites", "metabolites"), ("Reactions", "reactions"),
+                            ("Genomes", "genomes"), ("Compartments", "compartments")] %}
+      {% if history.get(key) %}
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="border rounded p-3 h-100">
+          <div class="fs-4 fw-semibold lh-1">{{ "{:,}".format(history[key][-1].count) }}</div>
+          <div class="small text-body-secondary">{{ label }}</div>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <p class="small text-body-secondary">
+      Last updated {{ history["models"][-1].date.strftime("%d %B %Y") if history.get("models") }}.
+    </p>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
