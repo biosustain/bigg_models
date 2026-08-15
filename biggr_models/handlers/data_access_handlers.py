@@ -8,7 +8,7 @@ class DataAccessPageHandler(utils.BaseHandler):
 
     def get(self):
         data = {
-            "biggr_address": "biggr.org",
+            "biggr_address": self.request.host or "bigg.bio",
             "data_models": MODELS_CLASS_MAP.keys(),
             "data_attributes": MODELS_PROPERTY_MAP.keys(),
             "escher_maps": ESCHER_MODULE_DEFINITIONS.keys(),
