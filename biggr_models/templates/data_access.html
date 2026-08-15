@@ -1,5 +1,5 @@
 {% extends "general_main.html" %}
-{% block title %}BiGGr Data Access{% endblock %}
+{% block title %}BiGG Data Access{% endblock %}
 {% set body_scroll_spy = "about-nav" %}
 {% set dataaccesspage = True %}
 {% block body %}
@@ -24,12 +24,12 @@
     </nav>
   </div>
   <div class="col-12 col-lg-9 pt-3" >
-    <h1>BiGGr Data Access</h1>
-    <p class="lead">Bulk (programmatic) data access is crucial for developing new tools on top of the BiGGr platform. We have therefore aimed to make it as easy as possible to access all data in BiGGr through APIs.</p>
+    <h1>BiGG Data Access</h1>
+    <p class="lead">Bulk (programmatic) data access is crucial for developing new tools on top of the BiGG platform. We have therefore aimed to make it as easy as possible to access all data in BiGG through APIs.</p>
 
     <div id="data_overview">
       <h2>Overview</h2>
-      <p>Data access is integrated throughout BiGGr, wherever possible. Models can for example be directly downloaded from their respective pages. Bulk metabolite and reaction downloads are available below. In addition, an extensive API is available, including a small python library that facilitates accessing this API.</p>
+      <p>Data access is integrated throughout BiGG, wherever possible. Models can for example be directly downloaded from their respective pages. Bulk metabolite and reaction downloads are available below. In addition, an extensive API is available, including a small python library that facilitates accessing this API.</p>
     </div>
 
     <div id="data_downloads">
@@ -84,10 +84,10 @@
 
     <div id="data_objects">
       <h2>Object Access</h2>
-      <p class="lead">The first set of API calls discussed here enables users to directly access the entities as they are represented in the database. This is a more low-level method of retrieving the data and may require more data processing comparedt to the table-based API calls discussed below. To facilitate usage of this API, BiGGr provides a small python library that provides abstractions for the API.</p>
+      <p class="lead">The first set of API calls discussed here enables users to directly access the entities as they are represented in the database. This is a more low-level method of retrieving the data and may require more data processing comparedt to the table-based API calls discussed below. To facilitate usage of this API, BiGG provides a small python library that provides abstractions for the API.</p>
 
-      {% call general.github_link("biggr", "https://github.com/biosustain/biggr", "https://biosustain.github.io/biggr") %}
-        Repository containing a small python library that can be used to easily access the BiGGr API.
+      {% call general.github_link("bigg", "https://github.com/biosustain/bigg", "https://biosustain.github.io/bigg") %}
+        Repository containing a small python library that can be used to easily access the BiGG API.
       {% endcall %}
 
       <div id="data_objects_workflow">
@@ -161,7 +161,7 @@
     "rank": {"_type": "TaxonomicRank", "id": 1, "name": "no rank"}
   }
 }</code></pre>
-        <p>The equivalent can be achieved using the following python code, utilizing the BiGGr python library:</p>
+        <p>The equivalent can be achieved using the following python code, utilizing the BiGG python library:</p>
         <pre class="code-example"><code>from biggr import objects
 
 model = objects.get("model", "iML1515")
@@ -208,7 +208,7 @@ print(dir(model))</code></pre>
     </div>
     <div id="data_tables">
       <h2>Table Access</h2>
-      <p class="lead">A different API access method allows users to download the contents of any dynamic table presented on the BiGGr website.</p>
+      <p class="lead">A different API access method allows users to download the contents of any dynamic table presented on the BiGG website.</p>
       <div id="data_tables_workflow">
         <h3>Workflow</h3>
         <p>The data of all tables that dynamically list database entities (i.e. they are sortable and searchable) can be accessed programmatically through API endpoints. Generally, the endpoint URL can be obtained by inserting /api/v3 into the URL after the domain name. The data of the table of all models at {{general.external_link(biggr_address ~ "/models", "https://" ~ biggr_address ~ "/models")}} can be accessed at {{general.external_link(biggr_address ~ "/api/v3/models", "https://" ~ biggr_address ~ "/api/v3/models")}}.</p>
