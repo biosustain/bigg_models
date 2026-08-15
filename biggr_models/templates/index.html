@@ -45,20 +45,6 @@
     {% include "general_navbar.html" %}
     <div class="container-lg mb-5 mt-2">
       {% block body %}
-      <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-          <div class="card bg-warning-subtle mb-3">
-            <div class="card-header">
-              <h5 class="card-title">Under Active Development</h5>
-            </div>
-            <div class="card-body">
-              <p>This is a develpment version of BiGGr. Not all functions availabe on the old BiGG Models repository are
-                available here yet.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="row">
         {% call(url) homepage_card("Collections", "collection_L", "/collections/", count=counts.get("collections")) %}
           {{ highlighted_entity(url, "iECx6", extra="E. coli") }}

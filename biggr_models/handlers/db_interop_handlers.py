@@ -8,7 +8,7 @@ from biggr_models.queries import gene_queries, genome_queries
 from sqlalchemy import inspect
 
 
-BASE_URL = "https://biggr.org"
+BASE_URL = "https://bigg.bio"
 
 
 class BaseInteropQueryHandler(tornado.web.RequestHandler):
