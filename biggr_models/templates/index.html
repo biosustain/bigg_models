@@ -43,7 +43,7 @@
   {% include "general_color_mode_switcher.html" %}
   <main>
     {% include "general_navbar.html" %}
-    <div class="container-lg mb-5 mt-2">
+    <div class="container-lg mb-5" style="margin-top: 4rem;">
       {% block body %}
       <div class="row">
         {% call(url) homepage_card("Collections", "collection_L", "/collections/", count=counts.get("collections")) %}
@@ -174,6 +174,7 @@
         </div>
         <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex flex-column align-items-center p-2 position-relative">
           <a href="https://bright.dtu.dk/" target="_blank" class="stretched-link d-flex align-items-center text-decoration-none text-reset gap-3">
+            {# #1FD082 is the DTU/BRIGHT brand green, taken from the logo palette. #}
             <img src="/static/assets/dtu.jpg" alt="DTU logo" style="max-height: 5rem;" class="d-block">
             <div style="color: #1FD082;"><b>BRIGHT</b><br/>The Novo Nordisk Foundation Biotechnology Research Institute for the Green Transition</div>
           </a>
