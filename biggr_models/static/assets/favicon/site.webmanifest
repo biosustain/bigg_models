@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "BiGG Models",
+  "short_name": "BiGG",
   "icons": [
     {
       "src": "/static/assets/favicon/android-chrome-192x192.png",
@@ -17,4 +17,3 @@
   "background_color": "#ffffff",
   "display": "standalone"
 }
-
