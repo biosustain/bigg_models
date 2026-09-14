@@ -2,9 +2,9 @@ biggr_models
 =========================
 
 Python webserver of the 
-`BiGGr Repository`_.
+`BiGG Repository`_.
 
-.. _BiGGr Repository: https://biggr.org
+.. _BiGG Repository: https://bigg.bio
 
 .. toctree::
     :numbered: 3
