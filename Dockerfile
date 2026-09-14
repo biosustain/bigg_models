@@ -19,13 +19,13 @@ RUN pip install -r requirements.txt
 RUN git clone https://github.com/biosustain/biggr_maps.git biggr_maps
 WORKDIR /app/biggr_maps/
 # RUN git pull && git reset --hard 54c6d88
-RUN python setup.py install
+RUN pip install .
 WORKDIR /app
 
 RUN git clone https://github.com/biosustain/cobradb.git cobradb
 WORKDIR /app/cobradb
 # RUN git pull && git reset --hard 313ce67
-RUN python setup.py install
+RUN pip install .
 WORKDIR /app
 
 RUN apt-get install -y nodejs npm
@@ -43,7 +43,7 @@ RUN sass ./biggr_models/scss/custom.scss ./biggr_models/static/css/custom.css
 
 RUN cp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js biggr_models/static/js/
 
-RUN python setup.py install
+RUN pip install .
 
 #CMD ["python", "-m", "biggr_models.server", "--port=8910", "--processes=6"]
 CMD ["bin/server-entrypoint.sh"]
