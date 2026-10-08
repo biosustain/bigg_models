@@ -1,10 +1,15 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload, subqueryload
 from cobradb.models import (
+    Annotation,
+    AnnotationLink,
     Component,
     ComponentReferenceMapping,
     Reaction,
+    ReactionAnnotationMapping,
     ReactionMatrix,
+    ReferenceReaction,
+    ReferenceReactionAnnotationMapping,
     UniversalComponent,
     UniversalReaction,
     UniversalReactionMatrix,
@@ -29,11 +34,47 @@ def extract_universal_reaction_participants(matrix):
     return participants
 
 
+def extract_cross_references(annotation_db, source_type, mapping_db=None):
+    """List the external identifiers linked by one annotation, with provenance.
+
+    source_type is 'rhea_reference' for annotations of the reference (Rhea)
+    reaction, and 'modelseed' for ModelSEED reactions mapped onto the reaction.
+    For ModelSEED mappings, 'match' records how the mapping was established:
+    'bigg_id' (ModelSEED lists the BiGG ID as an alias) and/or 'stoichiometry'
+    (participants matched through their ModelSEED compound annotations).
+    """
+    if mapping_db is None:
+        match = ["reference"]
+    else:
+        match = []
+        if mapping_db.bigg_id_match:
+            match.append("bigg_id")
+        if mapping_db.pattern_match:
+            match.append("stoichiometry")
+    return [
+        {
+            "namespace": link.data_source.bigg_id,
+            "identifier": link.identifier,
+            "source": annotation_db.bigg_id,
+            "source_type": source_type,
+            "source_obsolete": annotation_db.is_obsolete,
+            "match": match,
+        }
+        for link in annotation_db.links
+    ]
+
+
 def get_reactions(session: Session):
+    annotation_options = joinedload(
+        ReferenceReactionAnnotationMapping.annotation
+    ).subqueryload(Annotation.links).joinedload(AnnotationLink.data_source)
     query = select(Reaction)
     query = query.options(
         joinedload(Reaction.universal_reaction).options(
-            joinedload(UniversalReaction.reference),
+            joinedload(UniversalReaction.reference)
+            .subqueryload(ReferenceReaction.annotation_mappings)
+            .options(annotation_options),
+            subqueryload(UniversalReaction.old_bigg_ids),
             subqueryload(UniversalReaction.matrix).joinedload(
                 UniversalReactionMatrix.universal_compartmentalized_component
             ),
@@ -42,6 +83,10 @@ def get_reactions(session: Session):
             joinedload(ReactionMatrix.compartmentalized_component),
             joinedload(ReactionMatrix.universal_reaction_matrix),
         ),
+        subqueryload(Reaction.annotation_mappings)
+        .joinedload(ReactionAnnotationMapping.annotation)
+        .subqueryload(Annotation.links)
+        .joinedload(AnnotationLink.data_source),
     )
     query = query.filter(Reaction.collection_id == None)
     results = session.scalars(query).all()
@@ -60,9 +105,22 @@ def get_reactions(session: Session):
             "universalreaction__is_exchange": reaction_db.universal_reaction.is_exchange,
             "universalreaction__is_pseudo": reaction_db.universal_reaction.is_pseudo,
             "universalreaction__is_transport": reaction_db.universal_reaction.is_transport,
+            "universalreaction__old_bigg_ids": [
+                x.old_bigg_id for x in reaction_db.universal_reaction.old_bigg_ids
+            ],
         }
+        cross_references = []
         if (reference_db := reaction_db.universal_reaction.reference) is not None:
             d["referencereaction__bigg_id"] = reference_db.bigg_id
+            for mapping_db in reference_db.annotation_mappings:
+                cross_references.extend(
+                    extract_cross_references(mapping_db.annotation, "rhea_reference")
+                )
+        for mapping_db in reaction_db.annotation_mappings:
+            cross_references.extend(
+                extract_cross_references(mapping_db.annotation, "modelseed", mapping_db)
+            )
+        d["cross_references"] = cross_references
         reactions.append(d)
     return reactions
 

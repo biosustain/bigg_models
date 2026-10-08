@@ -77,9 +77,24 @@
     "universalreaction__is_exchange": false,
     "universalreaction__is_pseudo": false,
     "universalreaction__is_transport": false,
-    "referencereaction__bigg_id": "RHEA:11372"
+    "universalreaction__old_bigg_ids": [],
+    "referencereaction__bigg_id": "RHEA:11372",
+    "cross_references": [
+      {"namespace": "rhea", "identifier": "11372", "source": "RHEA:11372",
+       "source_type": "rhea_reference", "source_obsolete": false, "match": ["reference"]},
+      {"namespace": "ec-code", "identifier": "6.3.1.1", "source": "RHEA:11372",
+       "source_type": "rhea_reference", "source_obsolete": false, "match": ["reference"]},
+      {"namespace": "kegg.reaction", "identifier": "R00483", "source": "RHEA:11372",
+       "source_type": "rhea_reference", "source_obsolete": false, "match": ["reference"]},
+      {"namespace": "seed.reaction", "identifier": "rxn00340", "source": "seed.reaction:rxn00340",
+       "source_type": "modelseed", "source_obsolete": false, "match": ["bigg_id"]},
+      {"namespace": "metanetx.reaction", "identifier": "MNXR96060", "source": "seed.reaction:rxn00340",
+       "source_type": "modelseed", "source_obsolete": false, "match": ["bigg_id"]},
+      ...
+    ]
   },
 ...]</code></pre>
+      <p>The field <i>universalreaction__old_bigg_ids</i> lists superseded BiGG identifiers of redundant legacy reactions that were merged into the universal reaction (for example, ACODA_1 for ACODA); these identifiers remain searchable. Each entry in <i>cross_references</i> lists one external identifier together with its provenance. The <i>source</i> is the record the identifier was obtained from, and <i>source_type</i> indicates how that record is linked to the reaction: <i>rhea_reference</i> for cross-references of the Rhea reference reaction the universal reaction is mapped to, and <i>modelseed</i> for ModelSEED reactions mapped onto the reaction. For ModelSEED mappings, <i>match</i> records how the mapping was established: <i>bigg_id</i> when ModelSEED lists the BiGG ID as an alias, and <i>stoichiometry</i> when the reaction participants match through their ModelSEED compound annotations. <i>source_obsolete</i> marks ModelSEED reactions flagged as obsolete by ModelSEED.</p>
     </div>
 
     <div id="data_objects">
