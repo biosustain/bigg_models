@@ -6,7 +6,8 @@ from cobradb.models import (
     UniversalReaction,
 )
 from biggr_models.handlers import utils
-from biggr_models.queries import reaction_queries, utils as query_utils
+from biggr_models.queries import object_queries, reaction_queries, utils as query_utils
+from functools import partial
 import re
 from cobradb.parse import hash_metabolite_dictionary
 
@@ -50,6 +51,10 @@ class UniversalReactionHandler(utils.BaseHandler):
     template = utils.env.get_template("universal_reaction.html")
 
     def get(self, reaction_bigg_id):
+        if self.is_api_request():
+            return self.return_object(
+                partial(object_queries.get_object, UniversalReaction), reaction_bigg_id
+            )
         try:
             result = utils.do_safe_query(
                 reaction_queries.get_universal_reaction_and_models, reaction_bigg_id
@@ -169,6 +174,12 @@ class ReactionHandler(utils.BaseHandler):
     template = utils.env.get_template("reaction.html")
 
     def get(self, model_bigg_id, reaction_bigg_id):
+        if self.is_api_request():
+            return self.return_object(
+                object_queries.get_model_reaction_object,
+                reaction_bigg_id,
+                model_bigg_id,
+            )
         results = utils.safe_query(
             reaction_queries.get_model_reaction, model_bigg_id, reaction_bigg_id
         )

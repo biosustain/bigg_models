@@ -27,7 +27,6 @@ from tornado.web import (
 from jinja2 import Environment, PackageLoader
 from os import path
 import mimetypes
-from pprint import pprint
 
 
 MODELS_CLASS_MAP = {x.__name__: x for x in Base.__subclasses__()}
@@ -259,16 +258,24 @@ class BaseHandler(RequestHandler):
         # note that serving a json list is a security risk
         # This is meant to be serving public-read only data only.
         if isinstance(chunk, (dict, list, tuple, Base)):
-            try:
-                value_str = json.dumps(chunk, cls=BiGGrJSONEncoder)
-            except Exception as e:
-                pprint(chunk)
-                print(e)
-            # value_str = json.dumps(chunk)
+            value_str = json.dumps(chunk, cls=BiGGrJSONEncoder)
             RequestHandler.write(self, value_str)
             self.set_header("Content-type", "application/json; charset=utf-8")
         else:
             RequestHandler.write(self, chunk)
+
+    def is_api_request(self):
+        return self.request.uri.startswith("/api")
+
+    def return_object(self, f, *args):
+        """Serve an entity page under /api in the format of the objects API.
+
+        The page handlers build data for their templates that cannot be
+        serialized, so API requests for entity pages return the same JSON as
+        a POST to /api/v3/objects for that entity.
+        """
+        self.write(do_safe_query(f, *args))
+        self.finish()
 
     def return_result(self, result=None):
         """Returns result as either rendered HTML or JSON

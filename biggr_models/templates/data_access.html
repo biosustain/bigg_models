@@ -221,6 +221,15 @@ print(dir(model))</code></pre>
           <li>{{entity}}</li>
           {% endfor %}
         </ul>
+        <p>Entity pages can also be retrieved with a GET request by prefixing their address with /api/v3, which returns the same JSON as the corresponding object request. For example:</p>
+        <ul>
+          <li>{{biggr_address}}/api/v3/universal/reactions/ACODA (type universal_reaction)</li>
+          <li>{{biggr_address}}/api/v3/universal/metabolites/ala__L (type universal_component)</li>
+          <li>{{biggr_address}}/api/v3/models/iML1515/reactions/ACODA (type model_reaction, with model_id)</li>
+          <li>{{biggr_address}}/api/v3/models/iML1515/metabolites/ala__L_c (type model_compartmentalized_component, with model_id)</li>
+          <li>{{biggr_address}}/api/v3/compartments/c (type compartment)</li>
+          <li>{{biggr_address}}/api/v3/genomes/ncbi_assembly:GCF_000005845.2 (type genome)</li>
+        </ul>
         <p>
           <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#data_relations" aria-expanded="false" aria-controls="data_relations">
             Display all relationships available through this API.

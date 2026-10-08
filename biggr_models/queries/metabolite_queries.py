@@ -797,6 +797,9 @@ def get_model_compartmentalized_component_object(
         return None
 
     id_sel = utils.convert_id_to_query_filter(id, CompartmentalizedComponent)
+    if isinstance(id, str):
+        # Also accept the ID used in the model (e.g. ala__L_c for ala__L_c:0).
+        id_sel = or_(id_sel, ModelCompartmentalizedComponent.bigg_id == id)
     model_sel = utils.convert_id_to_query_filter(model_id, Model)
     comp_component_db = session.scalars(
         select(ModelCompartmentalizedComponent)

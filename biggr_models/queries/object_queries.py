@@ -14,6 +14,7 @@ from cobradb.models import (
     MemoteTest,
     Model,
     ModelCollection,
+    ModelReaction,
     Publication,
     Reaction,
     ReactionMatrix,
@@ -28,7 +29,10 @@ from cobradb.models import (
     UniversalReaction,
 )
 from sqlalchemy import select
-from sqlalchemy.orm import Session, joinedload, subqueryload
+from sqlalchemy.orm import Session, contains_eager, joinedload, subqueryload
+
+from cobradb.parse import split_id_and_copy_tag
+from cobradb.util import ref_str_to_tuple
 
 from biggr_models.queries import utils
 
@@ -132,3 +136,55 @@ def get_object_property(
         results = list(results)
 
     return {"id": id, "objects": results}
+
+
+def get_model_reaction_object(
+    session: Session,
+    id: utils.IDType,
+    model_id: utils.IDType,
+):
+    """Get a reaction as it appears in a model, by its BiGG ID in that model
+    (e.g. ACODA, or ACODA:2 for a second copy)."""
+    query = (
+        select(ModelReaction)
+        .join(ModelReaction.reaction)
+        .join(Reaction.universal_reaction)
+        .join(ModelReaction.model)
+        .options(
+            contains_eager(ModelReaction.reaction).contains_eager(
+                Reaction.universal_reaction
+            ),
+            contains_eager(ModelReaction.model),
+        )
+        .filter(utils.convert_id_to_query_filter(model_id, Model))
+    )
+    if isinstance(id, int):
+        query = query.filter(ModelReaction.id == id)
+    else:
+        reaction_bigg_id, copy_number = split_id_and_copy_tag(id)
+        query = query.filter(UniversalReaction.bigg_id == reaction_bigg_id).filter(
+            ModelReaction.copy_number == copy_number
+        )
+    model_reaction_db = session.scalars(query.limit(1)).first()
+
+    if model_reaction_db is None:
+        raise utils.NotFoundError(f"No Reaction {id} found in model {model_id}")
+
+    return {"id": id, "model_id": model_id, "object": model_reaction_db}
+
+
+def get_genome_object_by_accession(session: Session, id: str):
+    """Get a genome by its accession reference (e.g. ncbi_assembly:GCF_000005845.2)."""
+    try:
+        accession_type, accession_value = ref_str_to_tuple(id)
+    except Exception:
+        raise utils.NotFoundError(f"No Genome found with ID {id}")
+    genome_id = session.scalars(
+        select(Genome.id)
+        .filter(Genome.accession_type == accession_type)
+        .filter(Genome.accession_value == accession_value)
+        .limit(1)
+    ).first()
+    if genome_id is None:
+        raise utils.NotFoundError(f"No Genome found with ID {id}")
+    return get_object(Genome, session, genome_id) | {"id": id}

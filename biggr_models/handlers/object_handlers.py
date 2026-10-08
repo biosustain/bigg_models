@@ -66,6 +66,7 @@ MODELS_CLASS_MAP = {
     "COMPONENT": object_type_variant(Component),
     "COMPARTMENTALIZEDCOMPONENT": object_type_variant(CompartmentalizedComponent),
     "MODELCOMPARTMENTALIZEDCOMPONENT": metabolite_queries.get_model_compartmentalized_component_object,
+    "MODELREACTION": object_queries.get_model_reaction_object,
     "UNIVERSALCOMPONENT": object_type_variant(UniversalComponent),
     "REACTION": object_type_variant(Reaction),
     "UNIVERSALREACTION": object_type_variant(UniversalReaction),

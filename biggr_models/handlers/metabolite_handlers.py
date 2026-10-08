@@ -15,7 +15,8 @@ from cobradb.models import (
 )
 from sqlalchemy import func, select
 from biggr_models.handlers import utils
-from biggr_models.queries import metabolite_queries, utils as query_utils
+from biggr_models.queries import metabolite_queries, object_queries, utils as query_utils
+from functools import partial
 
 import re
 
@@ -50,6 +51,10 @@ class UniversalMetaboliteHandler(utils.BaseHandler):
     template = utils.env.get_template("universal_metabolite.html")
 
     def get(self, met_bigg_id):
+        if self.is_api_request():
+            return self.return_object(
+                partial(object_queries.get_object, UniversalComponent), met_bigg_id
+            )
         try:
             result = utils.safe_query(metabolite_queries.get_metabolite, met_bigg_id)
         except query_utils.RedirectError as e:
@@ -119,6 +124,12 @@ class MetaboliteHandler(utils.BaseHandler):
     template = utils.env.get_template("metabolite.html")
 
     def get(self, model_bigg_id, comp_met_id):
+        if self.is_api_request():
+            return self.return_object(
+                metabolite_queries.get_model_compartmentalized_component_object,
+                comp_met_id,
+                model_bigg_id,
+            )
         results = utils.safe_query(
             metabolite_queries.get_model_comp_metabolite,
             comp_met_id,

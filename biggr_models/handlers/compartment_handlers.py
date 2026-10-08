@@ -1,6 +1,8 @@
 from biggr_models.handlers import utils
 from typing import Optional
+from biggr_models.queries import object_queries
 from biggr_models.queries.compartment_queries import get_compartment
+from functools import partial
 from sqlalchemy import select, func
 from cobradb.models import (
     Compartment,
@@ -101,6 +103,10 @@ class CompartmentHandler(utils.BaseHandler):
     template = utils.env.get_template("compartment.html")
 
     def get(self, compartment_bigg_id):
+        if self.is_api_request():
+            return self.return_object(
+                partial(object_queries.get_object, Compartment), compartment_bigg_id
+            )
         result = utils.do_safe_query(get_compartment, compartment_bigg_id)
         result["breadcrumbs"] = [
             ("Home", "/"),
