@@ -13,6 +13,7 @@ from cobradb.models import (
     Model,
     ModelCollection,
     Reaction,
+    ReactionIDMapping,
     ReferenceCompound,
     ReferenceReaction,
     ReferenceReactionAnnotationMapping,
@@ -438,6 +439,12 @@ class UniversalReactionSearchHandler(utils.DataHandler):
         utils.DataColumnSpec(
             UniversalReaction.name,
             "Name",
+        ),
+        utils.DataColumnSpec(
+            ReactionIDMapping.old_bigg_id,
+            "Old BiGG IDs",
+            agg_func=agg_strings,
+            requires=[UniversalReaction.old_bigg_ids],
         ),
         utils.DataColumnSpec(
             AnnotationProperty.value_str,
