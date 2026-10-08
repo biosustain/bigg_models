@@ -1,3 +1,5 @@
+import re
+
 from cobradb.models import (
     Annotation,
     AnnotationLink,
@@ -59,6 +61,9 @@ DATA_SOURCE_IDS = {
     "metanetx.chemical": utils.do_safe_query(get_data_source_id, "metanetx.chemical"),
     "metanetx.reaction": utils.do_safe_query(get_data_source_id, "metanetx.reaction"),
     "ec-code": utils.do_safe_query(get_data_source_id, "ec-code"),
+    "hmdb": utils.do_safe_query(get_data_source_id, "hmdb"),
+    "drugbank": utils.do_safe_query(get_data_source_id, "drugbank"),
+    "wikipedia.en": utils.do_safe_query(get_data_source_id, "wikipedia.en"),
 }
 
 
@@ -290,7 +295,7 @@ class MetaboliteAnnotationSearchHandler(utils.DataHandler):
 
     def pre_filter(self, query):
         return query.filter(Component.collection_id == None).filter(
-            AnnotationLink.data_source_id == DATA_SOURCE_IDS[self.data_source]
+            AnnotationLink.data_source_id == DATA_SOURCE_IDS.get(self.data_source)
         )
 
     def post_filter(self, query):
@@ -555,7 +560,7 @@ class UniversalReactionAnnotationSearchHandler(utils.DataHandler):
 
     def pre_filter(self, query):
         return query.filter(UniversalReaction.collection_id == None).filter(
-            AnnotationLink.data_source_id == DATA_SOURCE_IDS[self.data_source]
+            AnnotationLink.data_source_id == DATA_SOURCE_IDS.get(self.data_source)
         )
 
     def post_filter(self, query):
@@ -678,6 +683,12 @@ class SearchResultsHandler(utils.BaseHandler):
             elif search_query.startswith("MNX"):
                 namespace = "metanetx"
                 identifier = search_query
+            elif re.fullmatch(r"HMDB\d+", search_query):
+                namespace = "hmdb"
+                identifier = search_query
+            elif re.fullmatch(r"DB\d{5}", search_query):
+                namespace = "drugbank"
+                identifier = search_query
             else:
                 namespace = "BIGG"
                 identifier = search_query
@@ -713,6 +724,18 @@ class SearchResultsHandler(utils.BaseHandler):
 
         if namespace == "EC-CODE":
             identifier = identifier.rstrip("*")
+
+        if namespace == "HMDB":
+            # Accept legacy 5-digit accessions (HMDB00161 -> HMDB0000161).
+            if m := re.fullmatch(r"(?i)(?:HMDB)?(\d+)", identifier):
+                identifier = f"HMDB{int(m.group(1)):07d}"
+
+        if namespace == "WIKIPEDIA.EN":
+            namespace = "WIKIPEDIA"
+
+        if namespace == "WIKIPEDIA":
+            # Article titles are stored with underscores instead of spaces.
+            identifier = identifier.replace(" ", "_")
 
         if namespace == "CHEBI":
             return {
@@ -806,6 +829,33 @@ class SearchResultsHandler(utils.BaseHandler):
                 "row_icon": "reaction_S",
                 "columns": UniversalReactionAnnotationSearchHandler.column_specs,
                 "message": "Interpreted search query as a MetaCyc reaction entry.",
+            }
+        elif namespace == "HMDB":
+            return {
+                "id": "special_page",
+                "title": "HMDB",
+                "data_url": f"{S_API}/metabolites_ann/hmdb/{identifier}",
+                "row_icon": "molecule_S",
+                "columns": MetaboliteAnnotationSearchHandler.column_specs,
+                "message": "Interpreted search query as an HMDB metabolite entry.",
+            }
+        elif namespace == "DRUGBANK":
+            return {
+                "id": "special_page",
+                "title": "DrugBank",
+                "data_url": f"{S_API}/metabolites_ann/drugbank/{identifier}",
+                "row_icon": "molecule_S",
+                "columns": MetaboliteAnnotationSearchHandler.column_specs,
+                "message": "Interpreted search query as a DrugBank entry.",
+            }
+        elif namespace == "WIKIPEDIA":
+            return {
+                "id": "special_page",
+                "title": "Wikipedia",
+                "data_url": f"{S_API}/metabolites_ann/wikipedia.en/{identifier}",
+                "row_icon": "molecule_S",
+                "columns": MetaboliteAnnotationSearchHandler.column_specs,
+                "message": "Interpreted search query as a Wikipedia article.",
             }
         elif namespace == "INCHIKEY":
             return {
