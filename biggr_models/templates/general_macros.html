@@ -37,9 +37,9 @@
 {% if inchi %}
 {% set inchi_str = inchi.to_string() %}
 {% set inchi_key = inchi.key %}
-<li class="list-group-item"><a href="#" class="d-block text-reset text-decoration-none"
-		onclick="this.style.textWrap = {'stable': 'nowrap', 'nowrap': 'stable'}[this.style.textWrap];"
-		style="text-wrap: nowrap; overflow-x: hidden; text-overflow: ellipsis;">{{inchi_str}}</a></li>
+<li class="list-group-item"><a href="#" class="d-block text-reset text-decoration-none" title="Click to show the full InChI"
+		onclick="event.preventDefault(); this.style.textWrap = {'stable': 'nowrap', 'nowrap': 'stable'}[this.style.textWrap];"
+		style="text-wrap: nowrap; overflow-x: hidden; text-overflow: ellipsis; word-break: break-all;"><i class="text-secondary">{% if inchi_str.startswith('InChI=1S/') %}Standard InChI{% else %}InChI{% endif %}:</i> {{inchi_str}}</a></li>
 <li class="list-group-item"><i class="text-secondary">InChiKey:</i> {{inchi_key}}</li>
 {% endif %}
 {% endmacro %}

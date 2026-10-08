@@ -15,7 +15,7 @@
 {% endif %}
 {{ cards.flush_list_group_item(label="Formula", value=ref_formula) }}
 {% endif %}
-{{ general.inchi_key_list_item(reference.inchi) }}
+{{ general.inchi_list_item(reference.inchi) }}
 {% if reference.bigg_id.startswith('CHEBI:') %}
 {% set chebi_link -%}http://identifiers.org/{{reference.bigg_id}}{%- endset %}
 {{ cards.flush_list_group_item(value="View on ChEBI", link=chebi_link) }}
