@@ -2,6 +2,14 @@
 {% import "general_card_macros.html" as cards %}
 {% import "general_table_macros.html" as tables %}
 {% block title %}BiGG Reaction: {{universal_reaction.bigg_id}}{% endblock %}
+{% block head %}
+<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.4/r-3.0.7/datatables.min.css" rel="stylesheet"
+	integrity="sha384-RqJtgepBGtU0p2QrKr7V6ktj9xhjmruqRUBkoNgZSdyNDI9FYHUwbaapY3jgsx7a" crossorigin="anonymous">
+<script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.4/r-3.0.7/datatables.min.js"
+	integrity="sha384-LFoikRctTHRCzOQ2ubrUfFQlhXMtaj7g32RRDMk2UVJFlHlk/s3w8xMOPB5t92MP"
+	crossorigin="anonymous"></script>
+	<script src="/static/js/biggr_datatables.js"></script>
+{% endblock %}
 {% block body %}
 
 <div class="row rounded-2 border-start border-2 border-primary pt-3 mb-3 bg-primary bg-opacity-10">
@@ -116,18 +124,7 @@
         <h5 class="mb-0">In BiGG</h5>
       </div>
       <div class="card-body p-0">
-        {% call(model_reaction) tables.simple_table(["Organism", "Model"], model_reactions) %}
-            {% set link -%}/models/{{model_reaction.model.bigg_id}}/reactions/{{model_reaction.bigg_id}}{%- endset %}
-              <td>
-                <a href="{{link}}" class="d-block text-reset text-decoration-none">
-                  {% if model_reaction.model.organism is none %}-{% else %}{{model_reaction.model.organism}}{% endif %}</a>
-              </td>
-              <td>
-                <a href="{{link}}" class="d-block">
-                  {{model_reaction.model.bigg_id}}
-                </a>
-              </td>
-        {% endcall %}
+        {{ tables.data_table("listview", reaction_in_models_columns, reaction_in_models_url, "model_S") }}
       </div>
     </div>
   </div>

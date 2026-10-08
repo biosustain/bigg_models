@@ -59,6 +59,12 @@ class UniversalReactionHandler(utils.BaseHandler):
                 re.sub(self.request.path, "%s$" % reaction_bigg_id, e.args[0])
             )
         else:
+            result["reaction_in_models_url"] = (
+                f"/universal/reaction_in_models/{reaction_bigg_id}"
+            )
+            result["reaction_in_models_columns"] = (
+                ReactionInModelsListViewHandler.column_specs
+            )
             result["breadcrumbs"] = [
                 ("Home", "/"),
                 ("Universal", None),
@@ -70,6 +76,42 @@ class UniversalReactionHandler(utils.BaseHandler):
             ]
 
             self.return_result(result)
+
+
+class ReactionInModelsListViewHandler(utils.DataHandler):
+    title = "Reaction in Models"
+    bigg_id = None
+    page_data = {
+        "row_icon": "model_S",
+    }
+    column_specs = [
+        utils.DataColumnSpec(
+            ModelReaction.bigg_id,
+            "BiGG ID",
+            hyperlink="/models/${row['model__bigg_id']}/reactions/${row['modelreaction__bigg_id']}",
+            priority=1,
+        ),
+        utils.DataColumnSpec(
+            Model.bigg_id,
+            "Model",
+            hyperlink="/models/${row['model__bigg_id']}",
+            requires=[ModelReaction.model],
+            priority=0,
+        ),
+        utils.DataColumnSpec(
+            Model.organism,
+            "Organism",
+            requires=[ModelReaction.model],
+            priority=2,
+        ),
+    ]
+
+    def pre_filter(self, query):
+        return (
+            query.join(ModelReaction.reaction)
+            .join(Reaction.universal_reaction)
+            .filter(UniversalReaction.bigg_id == self.bigg_id)
+        )
 
 
 class ReactionListViewHandler(utils.DataHandler):

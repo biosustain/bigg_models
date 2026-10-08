@@ -64,6 +64,11 @@ def get_routes():
             reaction_handlers.UniversalReactionListViewHandler,
             name="reactions",
         ),
+        url(
+            api_regex + r"/universal/reaction_in_models/(?P<bigg_id>[^/]+)/?$",
+            reaction_handlers.ReactionInModelsListViewHandler,
+            name="reaction_in_models",
+        ),
         #
         (
             r"/(?:api/%s/)?(?:models/)?universal/reactions/([^/]+)/?$" % api_v,

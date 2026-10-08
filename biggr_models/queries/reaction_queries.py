@@ -293,7 +293,6 @@ def get_universal_reaction_and_models(
         select(UniversalReaction)
         .options(
             subqueryload(UniversalReaction.reactions).options(
-                subqueryload(Reaction.model_reactions).joinedload(ModelReaction.model),
                 subqueryload(Reaction.matrix).options(
                     joinedload(ReactionMatrix.universal_reaction_matrix),
                     joinedload(ReactionMatrix.compartmentalized_component).joinedload(
@@ -335,12 +334,6 @@ def get_universal_reaction_and_models(
     ).first()
     if not universal_reaction_db:
         raise utils.NotFoundError("No Reaction found with BiGG ID " + reaction_bigg_id)
-
-    model_reactions = [
-        model_reaction_db
-        for reaction_db in universal_reaction_db.reactions
-        for model_reaction_db in reaction_db.model_reactions
-    ]
 
     all_annotations = []
     if universal_reaction_db.reference:
@@ -460,7 +453,6 @@ def get_universal_reaction_and_models(
         "reference": universal_reaction_db.reference,
         "all_annotations": all_annotations,
         "aligned_reactions": aligned_reaction_strings,
-        "model_reactions": model_reactions,
         "annotation_sources": annotation_sources,
         "annotation_properties": annotation_properties,
         "annotation_linkouts": annotation_links,
