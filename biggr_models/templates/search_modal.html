@@ -104,8 +104,35 @@
 	      <ul>
 		<li>Identifiers can also be entered directly.</li>
 		<li>
-		  {{search_example('metanetx:MNXR100289', is_first=true)}}, 
+		  {{search_example('metanetx:MNXR100289', is_first=true)}},
 		  {{search_example('MNXR100289')}}
+		</li>
+	      </ul>
+	    </li>
+	    <li>
+	      {{ search_namespace("hmdb") }}
+	      <ul>
+		<li>Identifiers can also be entered directly. Legacy 5-digit accessions are accepted.</li>
+		<li>{{search_example('hmdb:HMDB0000161', is_first=true)}},
+		    {{search_example('HMDB0000161')}}
+		</li>
+	      </ul>
+	    </li>
+	    <li>
+	      {{ search_namespace("drugbank") }}
+	      <ul>
+		<li>Identifiers can also be entered directly.</li>
+		<li>{{search_example('drugbank:DB00160', is_first=true)}},
+		    {{search_example('DB00160')}}
+		</li>
+	      </ul>
+	    </li>
+	    <li>
+	      {{ search_namespace("wikipedia") }}
+	      <ul>
+		<li>Use the title of the English Wikipedia article.</li>
+		<li>{{search_example('wikipedia:Alanine', is_first=true)}},
+		    {{search_example('wikipedia:Lipoic acid')}}
 		</li>
 	      </ul>
 	    </li>
