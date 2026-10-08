@@ -4,10 +4,13 @@ from cobradb.models import (
     Annotation,
     AnnotationLink,
     Component,
+    ComponentAnnotationMapping,
     ComponentReferenceMapping,
     Reaction,
     ReactionAnnotationMapping,
     ReactionMatrix,
+    ReferenceCompound,
+    ReferenceCompoundAnnotationMapping,
     ReferenceReaction,
     ReferenceReactionAnnotationMapping,
     UniversalComponent,
@@ -34,23 +37,14 @@ def extract_universal_reaction_participants(matrix):
     return participants
 
 
-def extract_cross_references(annotation_db, source_type, mapping_db=None):
+def extract_cross_references(annotation_db, source_type, match):
     """List the external identifiers linked by one annotation, with provenance.
 
-    source_type is 'rhea_reference' for annotations of the reference (Rhea)
-    reaction, and 'modelseed' for ModelSEED reactions mapped onto the reaction.
-    For ModelSEED mappings, 'match' records how the mapping was established:
-    'bigg_id' (ModelSEED lists the BiGG ID as an alias) and/or 'stoichiometry'
-    (participants matched through their ModelSEED compound annotations).
+    source is the annotation the identifiers come from, and source_type how
+    that annotation is linked to the entity: through its reference (Rhea
+    reaction or ChEBI compound), or through ModelSEED matching. match records
+    how the link was established (see the data access page).
     """
-    if mapping_db is None:
-        match = ["reference"]
-    else:
-        match = []
-        if mapping_db.bigg_id_match:
-            match.append("bigg_id")
-        if mapping_db.pattern_match:
-            match.append("stoichiometry")
     return [
         {
             "namespace": link.data_source.bigg_id,
@@ -62,6 +56,22 @@ def extract_cross_references(annotation_db, source_type, mapping_db=None):
         }
         for link in annotation_db.links
     ]
+
+
+def unique_cross_references(cross_references):
+    unique = []
+    for x in cross_references:
+        if x not in unique:
+            unique.append(x)
+    return unique
+
+
+def get_match_flags(mapping_db, flags):
+    return [name for attr, name in flags if getattr(mapping_db, attr)]
+
+
+REACTION_MATCH_FLAGS = [("bigg_id_match", "bigg_id"), ("pattern_match", "stoichiometry")]
+METABOLITE_MATCH_FLAGS = [("bigg_id_match", "bigg_id"), ("inchi_match", "inchikey")]
 
 
 def get_reactions(session: Session):
@@ -114,13 +124,19 @@ def get_reactions(session: Session):
             d["referencereaction__bigg_id"] = reference_db.bigg_id
             for mapping_db in reference_db.annotation_mappings:
                 cross_references.extend(
-                    extract_cross_references(mapping_db.annotation, "rhea_reference")
+                    extract_cross_references(
+                        mapping_db.annotation, "rhea_reference", ["reference"]
+                    )
                 )
         for mapping_db in reaction_db.annotation_mappings:
             cross_references.extend(
-                extract_cross_references(mapping_db.annotation, "modelseed", mapping_db)
+                extract_cross_references(
+                    mapping_db.annotation,
+                    "modelseed",
+                    get_match_flags(mapping_db, REACTION_MATCH_FLAGS),
+                )
             )
-        d["cross_references"] = cross_references
+        d["cross_references"] = unique_cross_references(cross_references)
         reactions.append(d)
     return reactions
 
@@ -132,9 +148,16 @@ def get_metabolites(session: Session):
             subqueryload(UniversalComponent.default_component),
             subqueryload(UniversalComponent.old_bigg_ids),
         ),
-        subqueryload(Component.reference_mappings).joinedload(
-            ComponentReferenceMapping.reference_compound
-        ),
+        subqueryload(Component.reference_mappings)
+        .joinedload(ComponentReferenceMapping.reference_compound)
+        .subqueryload(ReferenceCompound.annotation_mappings)
+        .joinedload(ReferenceCompoundAnnotationMapping.annotation)
+        .subqueryload(Annotation.links)
+        .joinedload(AnnotationLink.data_source),
+        subqueryload(Component.annotation_mappings)
+        .joinedload(ComponentAnnotationMapping.annotation)
+        .subqueryload(Annotation.links)
+        .joinedload(AnnotationLink.data_source),
         subqueryload(Component.compartmentalized_components),
     )
     query = query.filter(Component.collection_id == None)
@@ -160,5 +183,22 @@ def get_metabolites(session: Session):
                 x.reference_compound.bigg_id for x in component_db.reference_mappings
             ],
         }
+        cross_references = []
+        for reference_mapping_db in component_db.reference_mappings:
+            for mapping_db in reference_mapping_db.reference_compound.annotation_mappings:
+                cross_references.extend(
+                    extract_cross_references(
+                        mapping_db.annotation, "chebi_reference", ["reference"]
+                    )
+                )
+        for mapping_db in component_db.annotation_mappings:
+            cross_references.extend(
+                extract_cross_references(
+                    mapping_db.annotation,
+                    "modelseed",
+                    get_match_flags(mapping_db, METABOLITE_MATCH_FLAGS),
+                )
+            )
+        d["cross_references"] = unique_cross_references(cross_references)
         metabolites.append(d)
     return metabolites

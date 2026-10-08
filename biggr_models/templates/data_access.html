@@ -39,26 +39,38 @@
         <a href="/api/v3/download/metabolites" class="btn btn-outline-primary btn-lg m-2 flex-fill" role="button">Download Metabolites</a>
         <a href="/api/v3/download/reactions" class="btn btn-outline-primary btn-lg m-2 flex-fill" role="button">Download Reactions</a>
       </div>
-      <p>The returned JSON files contain a list of all applicable entities. In the case of metabolites, information on each <strong class="dbentity">Component</strong> in the database is returned, in conjunction with select properties of the corresponding <strong class="dbentity">Universal Component</strong>, as recognized by the prefix '<i>universalcomponent__</i>'. An example entry for ATP is shown below:</p>
+      <p>The returned JSON files contain a list of all applicable entities. In the case of metabolites, information on each <strong class="dbentity">Component</strong> in the database is returned, in conjunction with select properties of the corresponding <strong class="dbentity">Universal Component</strong>, as recognized by the prefix '<i>universalcomponent__</i>'. An example entry for L-alanine is shown below:</p>
       <pre class="code-result"><code>[...,
   {
-    "bigg_id": "atp:-4",
-    "name": "ATP(4-)",
-    "formula": "C10H12N5O13P3",
-    "charge": -4,
-    "universalcomponent__bigg_id": "atp",
-    "universalcomponent__name": "ATP(4-)",
-    "universalcomponent__default_component": "atp:-4",
+    "bigg_id": "ala__L:0",
+    "name": "L-alanine",
+    "formula": "C3H7NO2",
+    "charge": 0,
+    "universalcomponent__bigg_id": "ala__L",
+    "universalcomponent__name": "L-alanine zwitterion",
+    "universalcomponent__default_component": "ala__L:0",
     "universalcomponent__old_bigg_ids": [],
     "compartmentalized_components": [
-      "atp_c:-4", "atp_m:-4", "atp_x:-4", "atp_n:-4", "atp_v:-4",
-      "atp_r:-4", "atp_e:-4", "atp_h:-4", "atp_g:-4","atp_f:-4"
+      "ala__L_c:0", "ala__L_p:0", "ala__L_e:0", "ala__L_m:0",
+      "ala__L_x:0", "ala__L_l:0", "ala__L_h:0"
     ],
     "references": [
-        "CHEBI:30616"
+      "CHEBI:57972", "CHEBI:16977"
+    ],
+    "cross_references": [
+      {"namespace": "kegg.compound", "identifier": "C00041", "source": "CHEBI:16977",
+       "source_type": "chebi_reference", "source_obsolete": false, "match": ["reference"]},
+      {"namespace": "hmdb", "identifier": "HMDB0000161", "source": "CHEBI:16977",
+       "source_type": "chebi_reference", "source_obsolete": false, "match": ["reference"]},
+      {"namespace": "seed.compound", "identifier": "cpd00035", "source": "seed.metabolite:cpd00035",
+       "source_type": "modelseed", "source_obsolete": false, "match": ["bigg_id", "inchikey"]},
+      {"namespace": "metanetx.chemical", "identifier": "MNXM32", "source": "seed.metabolite:cpd00035",
+       "source_type": "modelseed", "source_obsolete": false, "match": ["bigg_id", "inchikey"]},
+      ...
     ]
   },
 ...]</code></pre>
+      <p>The field <i>universalcomponent__old_bigg_ids</i> lists superseded BiGG identifiers that were merged into the universal metabolite. Cross-references are listed per component (charge state); the cross-references of a universal metabolite are the union over its components. In <i>cross_references</i>, <i>source_type</i> is <i>chebi_reference</i> for cross-references of the ChEBI reference compounds the component is mapped to, and <i>modelseed</i> for ModelSEED compounds mapped onto the component. For ModelSEED mappings, <i>match</i> records how the mapping was established: <i>bigg_id</i> when ModelSEED lists the BiGG ID as an alias, and <i>inchikey</i> when the structures match by InChIKey. The remaining fields are described with the reactions download below.</p>
       <p>For the reactions download, information on each <strong class="dbentity">Reaction</strong> in the database is returned, in conjunction with select properties of the corresponding <strong class="dbentity">Universal Reaction</strong>, as recognized by the prefix '<i>universalreaction__</i>'. An example of a reaction entry is shown below:</p>
       <pre class="code-result"><code>[...,
   {
