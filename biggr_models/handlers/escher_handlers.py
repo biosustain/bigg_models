@@ -204,7 +204,7 @@ class EscherHandler(utils.BaseHandler):
             ):
                 self.set_header("Content-Type", "application/x-json")
                 self.set_header(
-                    "Content-Disposition", 'attachment; filename="biggr_reactions.json"'
+                    "Content-Disposition", 'attachment; filename="bigg_reactions.json"'
                 )
             self.write(escher_map_json)
             self.finish()
