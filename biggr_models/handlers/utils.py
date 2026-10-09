@@ -14,7 +14,7 @@ from typing import (
     Union,
 )
 from cobradb.models import Base, Session
-from sqlalchemy import Row, and_, or_
+from sqlalchemy import Row, and_, func, or_
 from sqlalchemy.sql.expression import Select
 from biggr_models.queries import utils as query_utils
 import json
@@ -345,7 +345,10 @@ def col_str_search(query, col_spec: "DataColumn"):
     """
     if (search_value := col_spec.search_value.strip()) == "":
         return False, query
-    return True, query.filter(col_spec.prop.icontains(search_value, autoescape=True))
+    # lower() LIKE instead of ILIKE, so the lower() trigram indexes are used
+    return True, query.filter(
+        func.lower(col_spec.prop).contains(search_value.lower(), autoescape=True)
+    )
 
 
 def col_bool_search(query, col_spec: "DataColumn"):

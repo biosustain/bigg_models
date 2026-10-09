@@ -68,7 +68,7 @@ def get_list(
         query = query.filter(
             or_(
                 *(
-                    x.prop.icontains(search_value)
+                    func.lower(x.prop).contains(search_value.lower(), autoescape=True)
                     for x in column_specs
                     if x.global_search
                 )
@@ -165,10 +165,19 @@ def get_search_list(
                 if ":" in col_search_query:
                     _, col_search_query = col_search_query.split(":", maxsplit=1)
 
+            # lower() LIKE instead of ILIKE, so the lower() trigram indexes are used
             if score_mode == "startswith":
-                cte_query = cte_query.filter(x.prop.istartswith(col_search_query))
+                cte_query = cte_query.filter(
+                    func.lower(x.prop).startswith(
+                        col_search_query.lower(), autoescape=True
+                    )
+                )
             elif score_mode == "contains":
-                cte_query = cte_query.filter(x.prop.icontains(col_search_query))
+                cte_query = cte_query.filter(
+                    func.lower(x.prop).contains(
+                        col_search_query.lower(), autoescape=True
+                    )
+                )
             else:
                 cte_query = cte_query.filter(x.prop == col_search_query)
 
@@ -221,7 +230,7 @@ def get_search_list(
         query = query.filter(
             or_(
                 *(
-                    x.prop.icontains(search_value)
+                    func.lower(x.prop).contains(search_value.lower(), autoescape=True)
                     for x in column_specs
                     if x.global_search
                 )
