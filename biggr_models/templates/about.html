@@ -30,6 +30,11 @@
           <a class="nav-link ms-3 py-0" href="#about_features_escher">Escher Maps</a>
         </nav>
         <a class="nav-link" href="#about_license">License</a>
+        <nav class="nav nav-underline flex-column">
+          <a class="nav-link ms-3 py-0" href="#about_license_code">Source Code</a>
+          <a class="nav-link ms-3 py-0" href="#about_license_data">Data and Models</a>
+          <a class="nav-link ms-3 py-0" href="#about_license_xrefs">External Cross-References</a>
+        </nav>
         <a class="nav-link" href="#about_contact">Contact</a>
       </nav>
     </nav>
@@ -135,28 +140,34 @@
     <div id="about_license">
       <h2>License</h2>
       <p>BiGG 2026 is hosted and maintained by the Reconstruction Research Group at the BRIGHT Institute, Technical University of Denmark (DTU).</p>
-      <h3>Source Code</h3>
-      <p>Source code for all BiGG 2026 repositories ({{general.external_link("bigg_models", "https://github.com/nnf-bright-biofoundry/bigg_models")}}, {{general.external_link("cobradb", "https://github.com/nnf-bright-biofoundry/cobradb")}}, {{general.external_link("bigg_models_data", "https://github.com/nnf-bright-biofoundry/bigg_models_data")}}, {{general.external_link("bigg", "https://github.com/nnf-bright-biofoundry/bigg")}}, and {{general.external_link("bigg_maps", "https://github.com/nnf-bright-biofoundry/bigg_maps")}}) is released under the <strong>Apache License 2.0</strong>. Code inherited from UC San Diego remains under the <strong>MIT License</strong>.</p>
-      <h3>Data and Models</h3>
-      <ul>
-        <li><strong>Legacy BiGG Content:</strong> Content inherited from BiGG Models (models, reference definitions and maps curated at UC San Diego) remains under the BiGG Models license of <strong>The Regents of the University of California</strong>, which permits educational, research and non-profit use. Commercial use of that content requires a separate agreement.</li>
-        <li><strong>BRIGHT Data &amp; Collections:</strong> Models, maps and data generated at BRIGHT, including the three pangenome-scale collections, are released under the {{general.external_link("Creative Commons Attribution 4.0 (CC BY 4.0)", "https://creativecommons.org/licenses/by/4.0/")}} license, except where otherwise noted.</li>
-        <li><strong>Embedded Model Licenses:</strong> Models that carry their own license in the model file remain under that license.</li>
-      </ul>
-      <p>The license applying to each collection:</p>
-      <table class="table table-sm">
-        <thead>
-          <tr><th>Collection</th><th>Origin</th><th>License</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><a href="/collections/Ecoli_panGEMs">Ecoli_panGEMs</a></td><td>BRIGHT</td><td>CC BY 4.0</td></tr>
-          <tr><td><a href="/collections/LactoPanGEM">LactoPanGEM</a></td><td>BRIGHT</td><td>CC BY 4.0</td></tr>
-          <tr><td><a href="/collections/iPKB_Clostridiaceae">iPKB_Clostridiaceae</a></td><td>BRIGHT</td><td>CC BY 4.0</td></tr>
-          <tr><td>All other collections</td><td>BiGG Models (UC San Diego)</td><td>BiGG Models license (The Regents of the University of California)</td></tr>
-        </tbody>
-      </table>
-      <h3>External Cross-References</h3>
-      <p>External cross-references are provided as identifiers and links; the linked content remains subject to the terms of each source (e.g. KEGG, MetaCyc, DrugBank, HMDB).</p>
+      <div id="about_license_code">
+        <h3>Source Code</h3>
+        <p>Source code for all BiGG 2026 repositories ({{general.external_link("bigg_models", "https://github.com/nnf-bright-biofoundry/bigg_models")}}, {{general.external_link("cobradb", "https://github.com/nnf-bright-biofoundry/cobradb")}}, {{general.external_link("bigg_models_data", "https://github.com/nnf-bright-biofoundry/bigg_models_data")}}, {{general.external_link("bigg", "https://github.com/nnf-bright-biofoundry/bigg")}}, and {{general.external_link("bigg_maps", "https://github.com/nnf-bright-biofoundry/bigg_maps")}}) is released under the Apache License 2.0. Code inherited from UC San Diego remains under the MIT License.</p>
+      </div>
+      <div id="about_license_data">
+        <h3>Data and Models</h3>
+        <ul>
+          <li>Legacy BiGG Content: Content inherited from BiGG Models (models, reference definitions and maps curated at UC San Diego) remains under the BiGG Models license of The Regents of the University of California, which permits educational, research and non-profit use. Commercial use of that content requires a separate agreement.</li>
+          <li>BRIGHT Data &amp; Collections: Models, maps and data generated at BRIGHT, including the three pangenome-scale collections, are released under the Creative Commons Attribution 4.0 (CC BY 4.0) license, except where otherwise noted.</li>
+          <li>Embedded Model Licenses: Models that carry their own license in the model file remain under that license.</li>
+        </ul>
+        <p>The license applying to each collection:</p>
+        <table class="table table-sm">
+          <thead>
+            <tr><th>Collection</th><th>Origin</th><th>License</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/collections/Ecoli_panGEMs">Ecoli_panGEMs</a></td><td>BRIGHT</td><td>CC BY 4.0</td></tr>
+            <tr><td><a href="/collections/LactoPanGEM">LactoPanGEM</a></td><td>BRIGHT</td><td>CC BY 4.0</td></tr>
+            <tr><td><a href="/collections/iPKB_Clostridiaceae">iPKB_Clostridiaceae</a></td><td>BRIGHT</td><td>CC BY 4.0</td></tr>
+            <tr><td>All other collections</td><td>BiGG Models (UC San Diego)</td><td>BiGG Models license (The Regents of the University of California)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="about_license_xrefs">
+        <h3>External Cross-References</h3>
+        <p>External cross-references are provided as identifiers and links; the linked content remains subject to the terms of each source (e.g. KEGG, MetaCyc, DrugBank, HMDB).</p>
+      </div>
     </div>
     <div id="about_contact">
       <h2>Contact</h2>
