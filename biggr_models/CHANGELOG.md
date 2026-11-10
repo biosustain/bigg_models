@@ -25,10 +25,6 @@ Research* Database Issue.
 
 ### Platform
 
-- Taxonomically anchored model collections, including multi-strain and pangenome-scale collections
-- Universal metabolites and reactions: previous BiGG identifiers merged under one canonical ID and kept as searchable aliases, with charge-state and proton-stoichiometry variants grouped
-- Collection-specific namespaces for metabolites and reactions that cannot be matched to the shared namespace
-- Metabolites anchored to reference compounds (ChEBI / InChI); reactions linked to Rhea
-- Genes linked to NCBI genome assemblies
-- MEMOTE quality reports and automatically generated Escher maps for each model
-- Advanced search, bulk downloads and API v3
+- Universal metabolites and reactions that merge previous BiGG identifiers and group charge-state variants, anchored to ChEBI and Rhea
+- Taxonomically anchored collections for single-model, multi-strain and pangenome-scale models
+- MEMOTE reports and Escher maps for every model, with API v3 and bulk downloads
