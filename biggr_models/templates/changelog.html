@@ -12,10 +12,7 @@
 <div class="row">
   <div class="col-12 col-lg-10 offset-lg-1">
 
-    <h1 class="fs-3 mb-1">Changelog</h1>
     <p class="text-body-secondary mb-4">
-      Changes to the data and the platform in each BiGG release. See <a href="/statistics">Statistics</a> for database growth over time.
-    </p>
 
     {% for release in releases %}
     <div class="card mb-4" id="v{{ release.version }}">
@@ -25,7 +22,7 @@
         </h2>
         <span class="text-body-secondary">{{ release.date }}</span>
         {% if release.label %}
-        <span class="badge text-bg-warning">{{ release.label }}</span>
+        <span class="badge rounded-pill text-secondary border border-secondary">{{ release.label }}</span>
         {% endif %}
       </div>
       <div class="card-body changelog-body">

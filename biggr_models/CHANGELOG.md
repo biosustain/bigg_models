@@ -12,8 +12,8 @@ followed by ` - Pre-release` or highlighted tags; the /changelog page parses the
 
 ## 0.1.0 - 2026-10-28 - Pre-release
 
-Initial public release of BiGG, accompanying our paper in the *Nucleic Acids
-Research* Database Issue.
+Initial public release of BiGG, accompanying our paper accepted for publication
+in the *Nucleic Acids Research* Database Issue.
 
 ### Data
 
