@@ -50,9 +50,4 @@ class ChangelogHandler(utils.BaseHandler):
     template = utils.env.get_template("changelog.html")
 
     def get(self):
-        self.return_result(
-            {
-                "releases": load_changelog(),
-                "breadcrumbs": [("Home", "/"), ("Changelog", "/changelog")],
-            }
-        )
+        self.return_result({"releases": load_changelog()})
