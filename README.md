@@ -62,4 +62,52 @@ restart in a loop. In those cases you still need to inspect the VM and push a fi
 **Renewing SSL certificates.** To renew the certificates manually, run:
 
     docker compose --profile prod up certbot && docker compose --profile prod restart nginx-prod
-    
+
+Backup and restore
+==================
+
+There are two levels of backup:
+
+| Level | What | Where | Use it to |
+|---|---|---|---|
+| VM | Snapshots of the OS disk and the data disk | Disk snapshots in resource group `rg-recon` | Bring back the whole server as it was: system, code, configs, certificates, Docker images and all data |
+| Data | Model and data files, plus a PostgreSQL dump (`pg_dump`) | `backups` container of the `biggr` storage account | Rebuild the database or recover files on any machine, also with a newer PostgreSQL version |
+
+Current archives (version of the accepted manuscript):
+
+| Level | Name |
+|---|---|
+| VM | `bigg-beta-261109`, `bigg-datadisk-beta-261109` |
+| Data | `backups/20261103/` (contains the database dump `biggr_20261109.dump`) |
+
+**Creating VM snapshots.** Stop (deallocate) the VM first, so both disks are
+consistent. Then create a snapshot of each disk (type: incremental, storage:
+Standard HDD, zone-redundant), and start the VM again. 
+
+**Restoring the VM from snapshots.** Snapshots store disk content only, not the
+VM configuration, so create the new VM with these settings:
+
+| Setting | Value |
+|---|---|
+| Size | `Standard_D8as_v5` |
+| Region / zone | North Europe / zone 1 |
+| Security type | Trusted launch, Gen 2 |
+| OS disk | Premium SSD, caching Read/write |
+| Data disk | Standard SSD, LUN 0, caching None |
+
+1. Create a managed disk from each snapshot.
+2. Open the restored OS disk and choose "Create VM". The VM boots from this disk,
+   so no image or login setup is needed: users and SSH keys are kept.
+3. In the same wizard, attach the restored data disk at LUN 0 **before the first
+   boot**. `/data` is mounted by UUID in `/etc/fstab` without `nofail`, so the VM
+   hangs at boot if the disk is missing.
+4. Start the VM. Docker starts `biggr-web`, `biggr-db` and `nginx-prod`
+   automatically (`restart: always`).
+5. Point the DNS records of `bigg.bio` and `biggr.org` (with `www.`) to the new
+   public IP, or move the old public IP to the new VM.
+6. Check that the website works. Do not run the old and new VM at the same time.
+
+**Archiving data and restoring PostgreSQL instance.**
+The data-level archive is created with `cobradb/bin/upload_archive`. How to run
+it and how to restore the database from it is described in the
+[cobradb README](https://github.com/biosustain/cobradb).
