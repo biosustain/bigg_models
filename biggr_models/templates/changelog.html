@@ -1,0 +1,39 @@
+{% extends "general_main.html" %}
+{% block title %}BiGG Changelog{% endblock %}
+{% set changelogpage = True %}
+{% block head %}
+<style>
+  .changelog-body h3 { font-size: 1.1rem; margin-top: 1.25rem; }
+  .changelog-body ul { margin-bottom: 0.5rem; }
+  .changelog-anchor { text-decoration: none; }
+</style>
+{% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-12 col-lg-10 offset-lg-1">
+
+    <h1 class="fs-3 mb-1">Changelog</h1>
+    <p class="text-body-secondary mb-4">
+      Changes to the data and the platform in each BiGG release. See <a href="/statistics">Statistics</a> for database growth over time.
+    </p>
+
+    {% for release in releases %}
+    <div class="card mb-4" id="v{{ release.version }}">
+      <div class="card-header d-flex flex-wrap align-items-baseline gap-3">
+        <h2 class="fs-4 mb-0">
+          <a class="changelog-anchor text-body" href="#v{{ release.version }}">v{{ release.version }}</a>
+        </h2>
+        <span class="text-body-secondary">{{ release.date }}</span>
+        {% if release.label %}
+        <span class="badge text-bg-warning">{{ release.label }}</span>
+        {% endif %}
+      </div>
+      <div class="card-body changelog-body">
+        {{ release.html }}
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+{% endblock %}

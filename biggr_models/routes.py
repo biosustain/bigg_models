@@ -4,6 +4,7 @@ from tornado.routing import URLSpec
 from tornado.web import RequestHandler
 from biggr_models.handlers import (
     advanced_search_handlers,
+    changelog_handlers,
     data_access_handlers,
     identifiers_handlers,
     download_handlers,
@@ -51,6 +52,7 @@ def get_routes():
         (r"/health/?$", utils.HealthHandler),
         (r"/about/?", utils.TemplateHandler, {"template_name": "about.html"}),
         (r"/statistics/?", home_handlers.StatisticsHandler),
+        (r"/changelog/?", changelog_handlers.ChangelogHandler),
         (
             r"/api/%s/objects/?$" % api_v,
             object_handlers.ObjectHandler,
