@@ -32,7 +32,13 @@ jobs:
           command_timeout: 30m
           script: |
             cd /data/projects/biggr_models/
-            cp ../cobradb/.env .env
+            echo "POSTGRES_PASSWORD='${{ secrets.POSTGRES_PASSWORD }}'" > .env
+            echo "POSTGRES_USER='${{ secrets.POSTGRES_USER }}'" >> .env
+            echo "POSTGRES_DB='${{ secrets.POSTGRES_DB }}'" >> .env
+            echo "PGUSER='${{ secrets.PGUSER }}'" >> .env
+            echo "" >> .env
+            echo "USED_JSON_FILE='${{ secrets.USED_JSON_FILE }}'" >> .env
+            echo "SAS='${{ secrets.SAS }}'" >> .env
             cp ../cobradb/settings.ini settings.ini
             docker compose --profile prod down
             docker compose --profile prod up -d --build --force-recreate --remove-orphans
