@@ -22,6 +22,9 @@ services:
       - ./settings.ini:/app/settings.ini
     environment:
       - COBRADB_POSTGRES_HOST=biggr-db
+      - COBRADB_POSTGRES_USER=${POSTGRES_USER}
+      - COBRADB_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - COBRADB_POSTGRES_DATABASE=${POSTGRES_DB}
 
   nginx-prod:
     profiles:

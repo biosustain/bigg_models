@@ -39,7 +39,6 @@ jobs:
             echo "" >> .env
             echo "USED_JSON_FILE='${{ secrets.USED_JSON_FILE }}'" >> .env
             echo "SAS='${{ secrets.SAS }}'" >> .env
-            cp ../cobradb/settings.ini settings.ini
             docker compose --profile prod down
             docker compose --profile prod up -d --build --force-recreate --remove-orphans
             docker system prune --all --force
