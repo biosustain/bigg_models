@@ -1,30 +1,27 @@
 # Changelog
 
 All notable changes to BiGG are recorded here. Each release has a **Data**
-section (models, collections and identifiers) and a **Platform** section
-(website, API and features).
+section and a **Platform** section.
 
 BiGG follows [Semantic Versioning](https://semver.org): data or feature
-additions bump the minor version, fixes bump the patch version, and changes
-that rename or remove BiGG IDs only happen in a major release. Versions below
+additions bump the minor version, fixes bump the patch version, and changes that can break existing use of BiGG bump the major version. Versions below
 1.0.0 are pre-releases made before the accompanying paper is formally published.
 
 Release headings must keep the format `## <version> - <YYYY-MM-DD>`, optionally
-followed by ` - Pre-release`; the /changelog page parses them.
+followed by ` - Pre-release` or highlighted tags; the /changelog page parses them.
 
 ## 0.1.0 - 2026-10-28 - Pre-release
 
 Initial public release of BiGG, accompanying our paper in the *Nucleic Acids
-Research* Database Issue (accepted; [doi:10.1093/nar/gkag1224](https://doi.org/10.1093/nar/gkag1224)).
+Research* Database Issue.
 
 ### Data
 
-- **40** model collections containing **4,881** models, **7,322** universal reactions, **2,441** universal metabolites, **4,857** genomes and **22** compartments
-- New pangenome-scale collections built at BRIGHT (CC BY 4.0):
+- New pangenome-scale collections built at BRIGHT:
   [LactoPanGEM](/collections/LactoPanGEM) (2,377 models),
   [Ecoli_panGEMs](/collections/Ecoli_panGEMs) (2,313 models) and
   [iPKB_Clostridiaceae](/collections/iPKB_Clostridiaceae) (97 models)
-- All models from legacy BiGG Models migrated and re-standardized to BiGG IDs
+- All available models from legacy BiGG Models migrated and re-standardized to BiGG IDs
 
 ### Platform
 
